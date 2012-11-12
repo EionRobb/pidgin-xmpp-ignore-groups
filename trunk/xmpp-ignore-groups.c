@@ -106,13 +106,8 @@ static gboolean unload_plugin(PurplePlugin *plugin)
 		PurpleAccountOption *option = (PurpleAccountOption *) list->data;
 		if (g_str_equal(purple_account_option_get_setting(option), "ignore_groups"))
 		{
+			list = g_list_delete_link(list, list);
 			purple_account_option_destroy(option);
-			
-			prpl_info->protocol_options = g_list_remove(prpl_info->protocol_options, list);
-			if (list->prev)
-				list = list->prev;
-			else
-				list = list->next;
 			break;
 		}
 	}
