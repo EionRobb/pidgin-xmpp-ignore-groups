@@ -19,6 +19,7 @@
 #include "account.h"
 #include "accountopt.h"
 #include "debug.h"
+#include "core.h"
 
 #ifndef _
 #define _(a) (a)
@@ -115,12 +116,24 @@ static gboolean unload_plugin(PurplePlugin *plugin)
 	return TRUE;
 }
 
+static PurplePlugin *this_plugin = NULL;
+
+static void
+plugin_quitting()
+{
+	unload_plugin(this_plugin);
+	this_plugin->info->unload = NULL;
+}
+
 static void plugin_init(PurplePlugin *plugin)
 {
 	PurplePluginInfo *info = plugin->info;
 	
 	// We rely on the Jabber/XMPP protocol plugin to work
 	info->dependencies = g_list_prepend(info->dependencies, "prpl-jabber");
+	
+	this_plugin = plugin;
+	purple_signal_connect(purple_get_core(), "quitting", plugin, PURPLE_CALLBACK(plugin_quitting), NULL);
 }
 
 static PurplePluginInfo info =
