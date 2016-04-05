@@ -3,9 +3,9 @@ CC ?= gcc
 PLUGINDIR ?= $(shell pkg-config --variable=plugindir purple)
 
 CFLAGS += -Wall -fPIC
-LDFLAGS += -L$(PLUGINDIR) -ljabber -shared
+LDFLAGS += -L$(PLUGINDIR) -Wl,-R$(PLUGINDIR) -shared
 CPPFLAGS += $(shell pkg-config --cflags glib-2.0 purple)
-LIBS += $(shell pkg-config --libs glib-2.0 purple)
+LIBS += $(shell pkg-config --libs glib-2.0 purple) -ljabber
 
 TARGET = libxmpp-ignore-groups.so
 
